@@ -1,6 +1,6 @@
 /*
 # ----------------------------------------------------------------------------#
-#                                    queue.h                                  #
+#                              Headers queue.h                                #
 # ----------------------------------------------------------------------------#
 #                         Universidad Simón Bolívar                           #
 #            Departamento de Computación y Tecnología de la Información       #
