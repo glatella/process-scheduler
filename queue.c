@@ -15,6 +15,17 @@
 
 #include "queue.h"
 
+/*
+#-------------------------------------------------------------------------# 
+#                                queueInit                                #    
+#-------------------------------------------------------------------------#
+
+    Initializes the queues structure.
+
+    Parameters:
+        - container is a pointer to a global queue.
+*/
+
 void queueInit (queue * container)
 {
 	container -> first = 0;
@@ -22,20 +33,65 @@ void queueInit (queue * container)
 	container -> lenght = 0;
 }
 
+/*
+#-------------------------------------------------------------------------# 
+#                               queueEmpty                                #    
+#-------------------------------------------------------------------------#
+
+    Return True if the queue is empty, False otherwise.
+
+    Parameters:
+        - container is a pointer to a global queue.
+*/
+
 bool queueEmpty (queue * container)
 {
 	return 0 == container -> lenght;
 }
+
+/*
+#-------------------------------------------------------------------------# 
+#                               queueStart                                #    
+#-------------------------------------------------------------------------#
+
+    Returns the first element of queue.
+
+    Parameters:
+        - container is a pointer to a global queue.
+*/
 
 elemQueue * queueStart (queue * container)
 {
 	return container -> first;
 }
 
+/*
+#-------------------------------------------------------------------------# 
+#                                 queueNext                               #    
+#-------------------------------------------------------------------------#
+
+    Returns the next element in queue.
+
+    Parameters:
+        - elem is a pointer to the elemQueue structure.
+*/
+
 elemQueue * queueNext(elemQueue * elem)
 {
 	return elem -> next;
 } 
+
+/*
+#-------------------------------------------------------------------------# 
+#                                   enQueue                               #    
+#-------------------------------------------------------------------------#
+
+    Add elements to tail of queue.
+
+    Parameters:
+        - elem is a pointer to the elemQueue structure.
+        - container is a pointer to a global queue.
+*/
 
 void enQueue (queue * container, elemQueue * elem)
 {
@@ -54,6 +110,17 @@ void enQueue (queue * container, elemQueue * elem)
 	container -> lenght += 1;
 }
 
+/*
+#-------------------------------------------------------------------------# 
+#                                   deQueue                               #    
+#-------------------------------------------------------------------------#
+
+    Extract an element at head of queue to use it.
+
+    Parameters:
+        - container is a pointer to a global queue.
+*/
+
 elemQueue * deQueue(queue * container)
 {
 	elemQueue * elem = container -> first;
@@ -61,6 +128,17 @@ elemQueue * deQueue(queue * container)
 	container -> lenght -= 1;
 	return elem;
 }
+
+/*
+#-------------------------------------------------------------------------# 
+#                                 queueLenght                             #    
+#-------------------------------------------------------------------------#
+
+    Returns the length of queue.
+
+    Parameters:
+        - container is a pointer to a global queue.
+*/
 
 int queueLenght (queue * container)
 {
