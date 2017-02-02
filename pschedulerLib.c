@@ -15,15 +15,6 @@
 
 #include "pschedulerLib.h"
 
-
-void crearProceso(proc * p,long pid, short prio, char status) 
-{
-
-    p -> pid = pid;
-    p -> prio = prio;
-    p -> status = status;
-}
-
 /*
 #-------------------------------------------------------------------------# 
 #                           InsertarProceso                               #    
@@ -34,7 +25,7 @@ void crearProceso(proc * p,long pid, short prio, char status)
 
     Parameters:
         - s is a pointer to the scheduler queues structure.
-        - p is a pointer to the data structure that stores information of 
+        - p is a pointer to data structure that stores information of 
             the process to be inserted. 
         - prio is a number from 0 to 5 and corresponds to the priority of the process.
 */
@@ -191,41 +182,18 @@ void CambiarEstado(EstrucSched *s, proc *p, char newstatus) // anexar archivo re
 
 /*
 #-------------------------------------------------------------------------# 
-#                                InitQueue                                #    
+#                               loadQueues                                #    
 #-------------------------------------------------------------------------#
 
-    Initializes the queues structure.
+    Load test data.
 
     Parameters:
-        -strucQueues is a pointer to the scheduler queues structure.   
+        - fileName is a text file that has in each line information about 
+            process.
+        - scheduler is a pointer to the scheduler queues structure.
+        - elem is a pointer to data structure that stores information of 
+            the process.
 */
-
-EstrucSched *initQueues(EstrucSched * structQueues)
-{
-    queue q0;
-    queue q1;
-    queue q2;
-    queue q3;
-    queue q4;
-    queue q5; 
-            
-    queueInit(&q0);
-    queueInit(&q1);
-    queueInit(&q2);
-    queueInit(&q3);
-    queueInit(&q4);
-    queueInit(&q5);
-
-    structQueues[0].prioQueues = &q0;
-    structQueues[1].prioQueues = &q1;
-    structQueues[2].prioQueues = &q2;
-    structQueues[3].prioQueues = &q3;
-    structQueues[4].prioQueues = &q4;
-    structQueues[5].prioQueues = &q5;
-
-    return structQueues;
-}
-
 
 void loadQueues(char *filename, EstrucSched * scheduler, proc * elem)
 {
@@ -252,39 +220,6 @@ void loadQueues(char *filename, EstrucSched * scheduler, proc * elem)
     fclose(ifp);
 }
 
-/*
-#-------------------------------------------------------------------------# 
-#                               loadQueues                                #    
-#-------------------------------------------------------------------------#
-
-    Load test data.
-
-    Parameters:
-        - fileName is a text file that has in each line information about 
-            process.
-        - scheduler is a pointer to the scheduler queues structure. 
-
-void loadQueues(char *filename, EstrucSched * scheduler, proc * elem)
-{
-    FILE * ifp = fopen(filename,"r");
-        
-    while (fscanf(ifp,"%li %c %hi %f %s\n", &elem -> pid, &elem -> status, 
-        &elem -> prio, &elem -> ptime, elem -> command) != EOF);
-    {
-        InsertarProceso(scheduler, elem, elem -> prio);
-        
-        elem++;
-        
-        while((elem = (proc *)malloc(sizeof(proc)))==NULL) 
-        //Check correct memory allocation
-        {
-            printf("Not enough memmory, waiting for more");
-            sleep(3);
-        }
-    }
-    fclose(ifp);
-}    
-*/
 
 /*
 #-------------------------------------------------------------------------# 
@@ -306,13 +241,19 @@ EstrucSched *Construye(char *filename)
     int numQueues = 6;  
     EstrucSched *structQueues = malloc(numQueues * sizeof(EstrucSched));
    
-    initQueues(structQueues);
-
-    //loadQueues ("datos",structQueues, elem);
-
     return structQueues;
 }
 
+/*
+#-------------------------------------------------------------------------# 
+#                               imprQueue                                 #    
+#-------------------------------------------------------------------------#
+
+    Prints the current status of queue.
+
+    Parameters:
+        - impqueue is a pointer to queues.
+*/
 
 void imprQueue(queue *impqueue)
 {
@@ -330,7 +271,7 @@ void imprQueue(queue *impqueue)
 #                                 Imprime                                 #    
 #-------------------------------------------------------------------------#
 
-    Prints the current status of the queue structure by the standard output.
+    Prints the current status of queue structure by the standard output.
 
     Parameters:
         - s is a pointer to the scheduler queues structure.
@@ -356,8 +297,7 @@ int main (int argc, char * argv[])
 {
     int numQueues = 6;  
     EstrucSched *structQueues = malloc(numQueues * sizeof(EstrucSched));
-    structQueues = initQueues(structQueues);
-    proc * aux;
+    proc * aux = malloc( sizeof(proc));
     
     queue q0;
     queue q1;
@@ -379,49 +319,9 @@ int main (int argc, char * argv[])
     structQueues[3].prioQueues = &q3;
     structQueues[4].prioQueues = &q4;
     structQueues[5].prioQueues = &q5;
-/*
-    proc *item0 = (proc *)malloc(sizeof(proc));
-	proc *item1 = (proc *)malloc(sizeof(proc));
-	proc *item2 = (proc *)malloc(sizeof(proc));
-	proc *item3 = (proc *)malloc(sizeof(proc));
-	proc *item4 = (proc *)malloc(sizeof(proc));
-	proc *item5 = (proc *)malloc(sizeof(proc));
-
-	char L = 'L';
-	char E = 'E';
-
-	crearProceso(item0,1678, 3, L);
-	crearProceso(item1,1234, 3, E);
-	crearProceso(item2,2324, 5, L);
-	crearProceso(item3,3678, 2, L);
-	crearProceso(item4,4678, 1, E);
-	crearProceso(item5,5678, 5, L);
-
-	InsertarProceso(structQueues, item0, item0 -> prio);
-	InsertarProceso(structQueues, item1, item1 -> prio);
-	InsertarProceso(structQueues, item2, item2 -> prio);
-	InsertarProceso(structQueues, item3, item3 -> prio);
-	InsertarProceso(structQueues, item4, item4 -> prio);
-	InsertarProceso(structQueues, item5, item5 -> prio);
-
-*/
-    //aux = ProxProceso(structQueues);
-
-	//CambiarEstado(structQueues, item1, 'L');
-
-	//imprQueue(structQueues[5].prioQueues);
 	
     loadQueues ("datos",structQueues, aux);
 
-	//Imprime(structQueues);
-
-    //proc * elem;
-    //elem = (proc *)malloc(sizeof(proc));
-
-    
-    //EstrucSched *structQueues = Construye("datos");    
-    
-    //aux = (proc *)deQueue(structQueues[1].prioQueues);
-   //printf("Proceso insertado correctamente: %li ", aux -> pid );
+	
 
 }
