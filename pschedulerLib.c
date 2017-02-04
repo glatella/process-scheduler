@@ -86,16 +86,18 @@ void InsertarProceso(EstrucSched *s, proc *p, short prio)
         - prio is a number from 0 to 5 and corresponds to the priority of the process.
 */
 
-void ElimProceso(EstrucSched *s, long pid, short prio){
+void  ElimProceso(EstrucSched *s, long pid, short prio){
     proc * aux;
     queue * qPicked = s[prio].prioQueues;
     for (aux = (proc *)queueStart(qPicked);aux;
          aux=(proc *) queueNext(&aux->header)){
         if (aux -> pid == pid){
+            printf("Eliminando proceso: %li\n", aux -> pid);
             queueElimElem(qPicked, &aux->header);
+            free(aux);
+            break;
         }
     }
-    free(aux);
 }
 
 
@@ -117,14 +119,13 @@ void ElimProcesoE(EstrucSched *s){
     proc * pr_elim;
 
     pr_elim = ProcEnEjec(s);
-    printf("proceso a eliminar: %li\n",pr_elim->pid);
     ElimProceso(s, pr_elim -> pid, pr_elim -> prio);
 }
 
 /*
 #-------------------------------------------------------------------------# 
 #                              ProxProceso                                #    
-#-------------------------------------------------------------------------#
+#---------------------------------------- ---------------------------------#
 
     Returns the next process to be scheduled.
 
@@ -135,52 +136,23 @@ void ElimProcesoE(EstrucSched *s){
 proc * ProxProceso(EstrucSched *s)
 {
 	proc * procEjec;
+    queue * qPicked;
+    int i = 0;
 
-	if (!queueEmpty(s[0].prioQueues))
-	{
-		procEjec = (proc *)deQueue(s[0].prioQueues);
-		procEjec -> status = 'E';
-		enQueue(s[0].prioQueues, &procEjec -> header);
-	}
+    while(i < 6){
 
-	else if (!queueEmpty(s[1].prioQueues))
-	{
-		procEjec = (proc *)deQueue(s[1].prioQueues);
-		procEjec -> status = 'E';
-		enQueue(s[1].prioQueues, &procEjec -> header);
-	}
-
-	else if (!queueEmpty(s[2].prioQueues))
-	{
-		procEjec = (proc *)deQueue(s[2].prioQueues);
-		procEjec -> status = 'E';
-		enQueue(s[2].prioQueues, &procEjec -> header);
-	}
- 
-	else if (!queueEmpty(s[3].prioQueues))
-	{
-		procEjec = (proc *)deQueue(s[3].prioQueues);
-		procEjec -> status = 'E';
-		enQueue(s[3].prioQueues, &procEjec -> header);
-	}
-
-	else if (!queueEmpty(s[4].prioQueues))
-	{
-		procEjec = (proc *)deQueue(s[4].prioQueues);
-		procEjec -> status = 'E';
-		enQueue(s[4].prioQueues, &procEjec -> header);
-	}
-
-	else if (!queueEmpty(s[5].prioQueues))
-	{
-		procEjec = (proc *)deQueue(s[5].prioQueues);
-		procEjec -> status = 'E';
-		enQueue(s[5].prioQueues, &procEjec -> header);
-
-	}
-
-
-	return procEjec;
+        qPicked = s[i].prioQueues;
+        procEjec = (proc *)queueStart(qPicked);
+        if (!queueEmpty(qPicked) && procEjec -> status != 'E')
+        {
+            procEjec = (proc *)deQueue(qPicked);
+            procEjec -> status = 'E'; 
+            enQueue(qPicked, &procEjec -> header);
+            return procEjec;
+        }
+        i++;
+    }
+    printf("No se encontraron procesos a planificar\n");
 }
 
 /*
@@ -353,12 +325,25 @@ int main (int argc, char * argv[])
     loadQueues ("datos",structQueues, aux);
     Imprime(structQueues);
     printf("Probando funcion ElimProceso---:\n");
-    ElimProceso(structQueues,1345,1);
+    //ElimProceso(structQueues,1345,1);
     Imprime(structQueues);
 	printf("Probando funcion ProxProcesos---:\n"); 
     structQueues -> pr_ejec = ProxProceso(structQueues);
     Imprime(structQueues);
     printf("Probando funcion ElimProcesoE---:\n");
     ElimProcesoE(structQueues);
+    structQueues -> pr_ejec = ProxProceso(structQueues);
+    ElimProcesoE(structQueues);
+    structQueues -> pr_ejec = ProxProceso(structQueues);
+    ElimProcesoE(structQueues);
+    structQueues -> pr_ejec = ProxProceso(structQueues);
+    ElimProcesoE(structQueues);
+    structQueues -> pr_ejec = ProxProceso(structQueues);
+    ElimProcesoE(structQueues);
+    structQueues -> pr_ejec = ProxProceso(structQueues);
+    ElimProcesoE(structQueues);
+    //structQueues -> pr_ejec = ProxProceso(structQueues);
+    //printf("pid: %li",pr_pruebas -> pid);
+    //structQueues -> pr_ejec = ProxProceso(structQueues);
     Imprime(structQueues);
 }

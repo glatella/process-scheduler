@@ -160,11 +160,13 @@ int queueLenght (queue * container)
 }
 
 void queueElimElem(queue * container, elemQueue * elem){
-	if(elem == container -> first || queueLenght(container)<= 1){
-		deQueue(container);
+	if(elem == container -> first){
+       deQueue(container);
 	}
-	else if(elem = container -> last){
-		elem -> prev -> next = 0;
+	else if(elem == container -> last){
+        container -> last = elem -> prev;
+        elem -> prev -> next = 0;
+
 	}else{
 		elem -> prev -> next = elem -> next;
 		elem -> next -> prev = elem -> prev;
