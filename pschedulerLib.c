@@ -15,6 +15,11 @@
 
 #include "pschedulerLib.h"
 
+proc *  ProcEnEjec(EstrucSched * s){
+    return s -> pr_ejec;
+}
+
+
 /*
 #-------------------------------------------------------------------------# 
 #                           InsertarProceso                               #    
@@ -29,6 +34,7 @@
             the process to be inserted. 
         - prio is a number from 0 to 5 and corresponds to the priority of the process.
 */
+
 
 void InsertarProceso(EstrucSched *s, proc *p, short prio)
 {
@@ -89,7 +95,10 @@ void ElimProceso(EstrucSched *s, long pid, short prio){
             queueElimElem(qPicked, &aux->header);
         }
     }
+    free(aux);
 }
+
+
 
 /*
 #-------------------------------------------------------------------------# 
@@ -104,7 +113,13 @@ void ElimProceso(EstrucSched *s, long pid, short prio){
         - s is a pointer to the scheduler queues structure.
 */
 
-void ElimProcesoE(EstrucSched *s);
+void ElimProcesoE(EstrucSched *s){
+    proc * pr_elim;
+
+    pr_elim = ProcEnEjec(s);
+    printf("proceso a eliminar: %li\n",pr_elim->pid);
+    ElimProceso(s, pr_elim -> pid, pr_elim -> prio);
+}
 
 /*
 #-------------------------------------------------------------------------# 
@@ -117,9 +132,9 @@ void ElimProcesoE(EstrucSched *s);
         - s is a pointer to the scheduler queues structure.
 */
 
-proc *ProxProceso(EstrucSched *s)
+proc * ProxProceso(EstrucSched *s)
 {
-	proc *procEjec;
+	proc * procEjec;
 
 	if (!queueEmpty(s[0].prioQueues))
 	{
@@ -163,6 +178,7 @@ proc *ProxProceso(EstrucSched *s)
 		enQueue(s[5].prioQueues, &procEjec -> header);
 
 	}
+
 
 	return procEjec;
 }
@@ -269,7 +285,7 @@ void imprQueue(queue *impqueue)
 	for (aux = (proc *)queueStart(impqueue);aux;
 		 aux=(proc *) queueNext(&aux->header))
 	{
-		printf("%li %c %hi %f %s\n", aux-> pid, aux -> status, 
+		printf("%li %c %hi %.2f %s\n", aux-> pid, aux -> status, 
 			aux -> prio, aux -> ptime, aux -> command);
 	}
 }
@@ -306,7 +322,9 @@ int main (int argc, char * argv[])
 
 {
     int numQueues = 6;  
-    EstrucSched *structQueues = malloc(numQueues * sizeof(EstrucSched));
+    EstrucSched *structQueues = malloc(numQueues * sizeof(queue) + sizeof(EstrucSched));
+    structQueues -> pr_ejec = NULL;
+
     proc * aux = malloc( sizeof(proc));
     proc * pr_pruebas;
 
@@ -337,12 +355,10 @@ int main (int argc, char * argv[])
     printf("Probando funcion ElimProceso---:\n");
     ElimProceso(structQueues,1345,1);
     Imprime(structQueues);
-	printf("Probando funcion ProxProcesos---:\n");
-    pr_pruebas = ProxProceso(structQueues);
-    printf("Proceso seleccionado: %li, Prioridad: %hi \n",
-            pr_pruebas -> pid, pr_pruebas -> prio);
+	printf("Probando funcion ProxProcesos---:\n"); 
+    structQueues -> pr_ejec = ProxProceso(structQueues);
     Imprime(structQueues);
-
-
-
+    printf("Probando funcion ElimProcesoE---:\n");
+    ElimProcesoE(structQueues);
+    Imprime(structQueues);
 }

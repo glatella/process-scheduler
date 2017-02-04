@@ -48,5 +48,7 @@ typedef struct
 typedef struct 
 {
 	queue *prioQueues; 
+	proc  * pr_ejec;
 }EstrucSched;
+
 
