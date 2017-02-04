@@ -99,10 +99,14 @@ void enQueue (queue * container, elemQueue * elem)
 	{
 		container -> first = elem;
 		container -> last = elem;
+		elem -> prev = 0;
 	}
 	else 
 	{
+		elem -> prev = container -> last;
+
 		container -> last -> next = elem;
+
 		container -> last = elem;
 	}
 
@@ -122,11 +126,21 @@ void enQueue (queue * container, elemQueue * elem)
 */
 
 elemQueue * deQueue(queue * container)
-{
+{	
 	elemQueue * elem = container -> first;
-	container -> first = container -> first -> next;
-	container -> lenght -= 1;
-	return elem;
+	if(container -> lenght > 1){
+		container -> first = container -> first -> next;
+		container -> first -> prev = 0;
+		container -> lenght -= 1;
+	}else{
+		container -> first = 0;
+		container -> last = 0;
+		container -> lenght = 0;
+
+	}
+	return elem;	
+
+
 }
 
 /*
@@ -143,5 +157,14 @@ elemQueue * deQueue(queue * container)
 int queueLenght (queue * container)
 {
 	return(container -> lenght);
+}
+
+void queueElimElem(queue * container, elemQueue * elem){
+	if (queueLenght(container) > 1){
+		elem -> prev -> next = elem -> next;
+		elem -> next -> prev = elem -> prev;
+	}else{
+		deQueue(container);
+	}
 }
 

@@ -24,6 +24,7 @@ typedef char bool;
 struct elemQueue
 {
 	struct elemQueue * next;
+	struct elemQueue * prev;
 };
 typedef struct elemQueue elemQueue;
 
@@ -48,4 +49,5 @@ elemQueue * deQueue(queue * container);
 
 int queueLenght (queue * container);
 
+void queueElimElem(queue * container, elemQueue * elem);
 
