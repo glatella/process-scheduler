@@ -287,63 +287,22 @@ void Imprime(EstrucSched *s)
 	}
 }
 
-
-
-
-int main (int argc, char * argv[])
-
+void writeFile (EstrucSched * s)
 {
-    int numQueues = 6;  
-    EstrucSched *structQueues = malloc(numQueues * sizeof(queue) + sizeof(EstrucSched));
-    structQueues -> pr_ejec = NULL;
+    proc *aux;
+    int i=0;
+    FILE * ofp  = fopen("archsalida", "w");
 
-    proc * aux = malloc( sizeof(proc));
-    proc * pr_pruebas;
-
-    queue q0;
-    queue q1;
-    queue q2;
-    queue q3;
-    queue q4;
-    queue q5; 
+    while (i < 6)
+    {
+        for (aux = (proc *)queueStart(s[i].prioQueues);aux;
+            aux=(proc *) queueNext(&aux -> header))
+        {
             
-    queueInit(&q0);
-    queueInit(&q1);
-    queueInit(&q2);
-    queueInit(&q3);
-    queueInit(&q4);
-    queueInit(&q5);
-
-    structQueues[0].prioQueues = &q0;
-    structQueues[1].prioQueues = &q1;
-    structQueues[2].prioQueues = &q2;
-    structQueues[3].prioQueues = &q3;
-    structQueues[4].prioQueues = &q4;
-    structQueues[5].prioQueues = &q5;
-	
-    printf("Probando funcion loadQueues---:\n");
-    loadQueues ("datos",structQueues, aux);
-    Imprime(structQueues);
-    printf("Probando funcion ElimProceso---:\n");
-    //ElimProceso(structQueues,1345,1);
-    Imprime(structQueues);
-	printf("Probando funcion ProxProcesos---:\n"); 
-    structQueues -> pr_ejec = ProxProceso(structQueues);
-    Imprime(structQueues);
-    printf("Probando funcion ElimProcesoE---:\n");
-    ElimProcesoE(structQueues);
-    structQueues -> pr_ejec = ProxProceso(structQueues);
-    ElimProcesoE(structQueues);
-    structQueues -> pr_ejec = ProxProceso(structQueues);
-    ElimProcesoE(structQueues);
-    structQueues -> pr_ejec = ProxProceso(structQueues);
-    ElimProcesoE(structQueues);
-    structQueues -> pr_ejec = ProxProceso(structQueues);
-    ElimProcesoE(structQueues);
-    structQueues -> pr_ejec = ProxProceso(structQueues);
-    ElimProcesoE(structQueues);
-    //structQueues -> pr_ejec = ProxProceso(structQueues);
-    //printf("pid: %li",pr_pruebas -> pid);
-    //structQueues -> pr_ejec = ProxProceso(structQueues);
-    Imprime(structQueues);
+            fprintf(ofp,"%li %c %hi %f %s \n", aux -> pid, aux -> status, 
+                aux -> prio, aux -> ptime, aux -> command );
+        }
+        i++;
+    }
+    fclose(ofp);
 }

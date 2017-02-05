@@ -52,3 +52,24 @@ typedef struct
 }EstrucSched;
 
 
+proc *  ProcEnEjec(EstrucSched * s);
+
+void InsertarProceso(EstrucSched *s, proc *p, short prio);
+
+void  ElimProceso(EstrucSched *s, long pid, short prio);
+
+void ElimProcesoE(EstrucSched *s);
+
+proc * ProxProceso(EstrucSched *s);
+
+void CambiarEstado(EstrucSched *s, proc *p, char newstatus);
+
+void loadQueues(char *filename, EstrucSched * scheduler, proc * elem);
+
+EstrucSched *Construye(char *filename);
+
+void imprQueue(queue *impqueue);
+
+void Imprime(EstrucSched *s);
+
+void writeFile (EstrucSched * s);
